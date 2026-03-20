@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>🌙 月亮的红花乐园</title>
+<style>
+:root{--primary:#ff6b6b;--primary-light:#ff9a9a;--secondary:#ffd93d;--accent:#6bcb77;--bg:#fff5f5;--card:#fff;--text:#333;--text-light:#888;--shadow:0 4px 20px rgba(255,107,107,.15);--radius:20px;--radius-sm:12px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;user-select:none}
+.app-header{background:linear-gradient(135deg,#2d1b69,#6b4fbb,#c471ed,#f64f59);padding:16px 20px 12px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 4px 15px rgba(107,79,187,.4);position:sticky;top:0;z-index:100}
+.app-title{font-size:20px;font-weight:800;color:#fff;text-shadow:0 2px 4px rgba(0,0,0,.1)}
+.parent-btn{background:rgba(255,255,255,.25);border:2px solid rgba(255,255,255,.5);color:#fff;padding:6px 14px;border-radius:20px;font-size:13px;font-weight:700;cursor:pointer;transition:.2s}
+.parent-btn:hover{background:rgba(255,255,255,.4)}
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:#fff;display:flex;box-shadow:0 -4px 20px rgba(0,0,0,.1);z-index:100}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 0 8px;cursor:pointer;transition:.2s;position:relative}
+.nav-item .nav-icon{font-size:24px;transition:transform .2s}
+.nav-item .nav-label{font-size:11px;color:var(--text-light);margin-top:2px;font-weight:600}
+.nav-item.active .nav-icon{transform:scale(1.2)}
+.nav-item.active .nav-label{color:var(--primary)}
+.nav-item.active::after{content:'';position:absolute;top:0;left:20%;right:20%;height:3px;background:var(--primary);border-radius:0 0 4px 4px}
+.page-content{padding:16px 16px 90px;max-width:480px;margin:0 auto}
+.card{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:16px}
+.flower-hero{background:linear-gradient(135deg,#ff6b6b,#ff9a9a,#ffd93d);border-radius:var(--radius);padding:24px 20px;text-align:center;margin-bottom:16px;position:relative;overflow:hidden;box-shadow:0 8px 30px rgba(255,107,107,.35)}
+.flower-hero::before{content:'🌸🌺🌸🌺🌸';position:absolute;top:-10px;left:0;right:0;font-size:30px;opacity:.15;letter-spacing:10px}
+.flower-count{font-size:72px;font-weight:900;color:#fff;text-shadow:0 4px 12px rgba(0,0,0,.2);line-height:1;animation:pulse-num 2s ease-in-out infinite}
+@keyframes pulse-num{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+.flower-label{font-size:16px;color:rgba(255,255,255,.9);font-weight:700;margin-top:4px}
+.flower-emoji{font-size:40px;margin-bottom:8px;display:block}
+.streak-bar{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:14px;background:rgba(255,255,255,.2);border-radius:30px;padding:8px 20px}
+.streak-flame{font-size:28px;animation:flame 0.8s ease-in-out infinite alternate;display:inline-block}
+@keyframes flame{0%{transform:scale(1) rotate(-5deg);filter:brightness(1)}100%{transform:scale(1.15) rotate(5deg);filter:brightness(1.2)}}
+.streak-text{color:#fff;font-size:18px;font-weight:800;text-shadow:0 2px 4px rgba(0,0,0,.2)}
+.streak-sub{font-size:12px;color:rgba(255,255,255,.8)}
+.section-title{font-size:16px;font-weight:800;color:var(--text);margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.checkin-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.checkin-item{background:#fff;border-radius:var(--radius-sm);padding:14px 12px;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:0 3px 12px rgba(0,0,0,.08);cursor:pointer;transition:.2s;border:2.5px solid transparent;position:relative;overflow:hidden}
+.checkin-item:active{transform:scale(.95)}
+.checkin-item.done{border-color:var(--accent);background:linear-gradient(135deg,#f0fff4,#e6ffed)}
+.checkin-item.done::after{content:'✓';position:absolute;top:6px;right:8px;color:var(--accent);font-size:14px;font-weight:900}
+.checkin-icon{font-size:32px}.checkin-name{font-size:13px;font-weight:700;text-align:center}
+.checkin-score{font-size:12px;color:var(--primary);font-weight:800;background:#fff0f0;padding:2px 8px;border-radius:10px}
+.checkin-count-tag{font-size:10px;color:var(--text-light)}
+.recent-badges{display:flex;gap:10px;overflow-x:auto;padding-bottom:4px}
+.recent-badge-item{flex-shrink:0;background:linear-gradient(135deg,#fff9c4,#fff3e0);border-radius:14px;padding:10px 14px;display:flex;flex-direction:column;align-items:center;gap:4px;min-width:80px;box-shadow:0 3px 10px rgba(255,200,0,.2);border:2px solid #ffd93d}
+.recent-badge-icon{font-size:28px}.recent-badge-name{font-size:11px;font-weight:700;text-align:center;color:#b8860b}
+.shop-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.shop-item{background:#fff;border-radius:var(--radius);padding:18px 14px;display:flex;flex-direction:column;align-items:center;gap:8px;box-shadow:0 4px 16px rgba(0,0,0,.08);cursor:pointer;transition:.25s;position:relative;overflow:hidden}
+.shop-item:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,.12)}
+.shop-item:active{transform:scale(.96)}
+.shop-item-icon{font-size:48px;transition:transform .3s}
+.shop-item:hover .shop-item-icon{transform:scale(1.1) rotate(5deg)}
+.shop-item-name{font-size:14px;font-weight:800;text-align:center}
+.shop-item-cost{font-size:15px;font-weight:900;color:var(--primary)}
+.shop-item-count{font-size:11px;color:var(--text-light)}
+.exchange-btn{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff;border:none;border-radius:20px;padding:7px 18px;font-size:13px;font-weight:800;cursor:pointer;transition:.2s;box-shadow:0 3px 10px rgba(255,107,107,.35);width:100%}
+.exchange-btn:active{transform:scale(.95)}
+.badge-category{margin-bottom:20px}
+.badge-category-title{font-size:15px;font-weight:800;margin-bottom:12px;padding:8px 14px;background:linear-gradient(135deg,#fff0f0,#fff8e1);border-radius:10px;border-left:4px solid var(--primary)}
+.badge-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.badge-item{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;border-radius:14px;transition:.2s}
+.badge-item.unlocked{background:linear-gradient(135deg,#fff9c4,#fff3e0);box-shadow:0 3px 12px rgba(255,200,0,.25);animation:badge-shine 3s ease-in-out infinite}
+@keyframes badge-shine{0%,100%{box-shadow:0 3px 12px rgba(255,200,0,.25)}50%{box-shadow:0 3px 20px rgba(255,200,0,.5)}}
+.badge-item.locked{background:#f5f5f5;filter:grayscale(.8);opacity:.7}
+.badge-icon{font-size:30px}.badge-name{font-size:10px;font-weight:700;text-align:center;line-height:1.2}
+.badge-progress{width:100%;height:4px;background:#e0e0e0;border-radius:2px;overflow:hidden;margin-top:2px}
+.badge-progress-bar{height:100%;background:linear-gradient(90deg,var(--primary),var(--secondary));border-radius:2px;transition:width .5s}
+.badge-pct{font-size:9px;color:var(--text-light)}
+.stat-tabs{display:flex;background:#f0f0f0;border-radius:12px;padding:4px;margin-bottom:16px;gap:2px}
+.stat-tab{flex:1;padding:7px 4px;border:none;background:transparent;border-radius:9px;font-size:12px;font-weight:700;color:var(--text-light);cursor:pointer;transition:.2s}
+.stat-tab.active{background:#fff;color:var(--primary);box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.chart-wrap{background:#fff;border-radius:var(--radius-sm);padding:16px;box-shadow:var(--shadow);margin-bottom:14px}
+.chart-title{font-size:13px;font-weight:800;margin-bottom:12px}
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:100px}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.bar-fill{width:100%;background:linear-gradient(180deg,var(--primary),var(--primary-light));border-radius:4px 4px 0 0;transition:height .5s;min-height:4px}
+.bar-label{font-size:9px;color:var(--text-light);font-weight:600}.bar-val{font-size:9px;font-weight:800;color:var(--primary)}
+.pie-wrap{display:flex;align-items:center;gap:16px}
+.pie-legend{flex:1}.pie-legend-item{display:flex;align-items:center;gap:6px;font-size:12px;margin-bottom:6px}
+.pie-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.parent-panel{background:#fff;border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);margin-bottom:14px}
+.parent-section-title{font-size:15px;font-weight:800;margin-bottom:14px;color:#555;border-bottom:2px solid #f0f0f0;padding-bottom:8px}
+.manage-list{display:flex;flex-direction:column;gap:8px}
+.manage-item{display:flex;align-items:center;gap:10px;background:#f9f9f9;border-radius:var(--radius-sm);padding:10px 14px}
+.manage-item-icon{font-size:24px}.manage-item-info{flex:1}
+.manage-item-name{font-size:14px;font-weight:700}.manage-item-sub{font-size:11px;color:var(--text-light)}
+.manage-item-actions{display:flex;gap:6px}
+.btn-sm{padding:4px 10px;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer}
+.btn-edit{background:#e3f2fd;color:#1976d2}.btn-del{background:#fce4ec;color:#c62828}
+.btn-add{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;padding:12px;border:2.5px dashed #ddd;border-radius:var(--radius-sm);background:transparent;color:var(--text-light);font-size:14px;font-weight:700;cursor:pointer;transition:.2s;margin-top:6px}
+.btn-add:hover{border-color:var(--primary);color:var(--primary);background:#fff5f5}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-overlay.show{display:flex}
+.modal{background:#fff;border-radius:24px;padding:28px 24px;width:88%;max-width:360px;box-shadow:0 20px 60px rgba(0,0,0,.2);animation:modal-pop .3s cubic-bezier(.34,1.56,.64,1)}
+@keyframes modal-pop{0%{transform:scale(.7);opacity:0}100%{transform:scale(1);opacity:1}}
+.modal-title{font-size:18px;font-weight:800;text-align:center;margin-bottom:20px}
+.modal-input{width:100%;padding:12px 16px;border:2.5px solid #eee;border-radius:12px;font-size:16px;outline:none;transition:border-color .2s;text-align:center;letter-spacing:4px;font-family:inherit}
+.modal-input:focus{border-color:var(--primary)}
+.modal-btns{display:flex;gap:10px;margin-top:16px}
+.modal-btn{flex:1;padding:12px;border:none;border-radius:12px;font-size:15px;font-weight:800;cursor:pointer;transition:.2s}
+.modal-btn.confirm{background:linear-gradient(135deg,var(--primary),var(--primary-light));color:#fff}
+.modal-btn.cancel{background:#f0f0f0;color:var(--text)}
+.modal-btn:active{transform:scale(.96)}
+.modal-emoji{font-size:48px;text-align:center;display:block;margin-bottom:8px}
+.reward-modal{background:linear-gradient(135deg,#ff6b6b,#ffd93d);border-radius:24px;padding:32px 24px;text-align:center;color:#fff;width:88%;max-width:360px;box-shadow:0 20px 60px rgba(255,107,107,.4);animation:modal-pop .4s cubic-bezier(.34,1.56,.64,1)}
+.reward-modal-title{font-size:24px;font-weight:900;margin:12px 0 6px}
+.reward-modal-sub{font-size:15px;opacity:.9}.reward-modal-count{font-size:56px;font-weight:900}
+.badge-unlock-modal{text-align:center;padding:32px 24px;background:linear-gradient(135deg,#fff9c4,#fff3e0,#fce4ec);border-radius:24px;width:88%;max-width:360px;box-shadow:0 20px 60px rgba(255,200,0,.3);animation:modal-pop .4s cubic-bezier(.34,1.56,.64,1)}
+.badge-unlock-icon{font-size:72px;animation:badge-spin .6s ease}
+@keyframes badge-spin{0%{transform:rotate(-180deg) scale(0)}100%{transform:rotate(0) scale(1)}}
+.badge-unlock-title{font-size:22px;font-weight:900;color:#b8860b;margin:10px 0 6px}
+.badge-unlock-name{font-size:17px;font-weight:700}
+.form-group{margin-bottom:14px}
+.form-label{font-size:13px;font-weight:700;margin-bottom:6px;display:block}
+.form-input{width:100%;padding:10px 14px;border:2px solid #eee;border-radius:10px;font-size:14px;outline:none;transition:border-color .2s;font-family:inherit}
+.form-input:focus{border-color:var(--primary)}
+.emoji-picker{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.emoji-option{font-size:24px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:8px;cursor:pointer;border:2px solid transparent;transition:.15s}
+.emoji-option.selected{border-color:var(--primary);background:#fff5f5}
+.emoji-option:hover{background:#f9f9f9}
+.page{display:none}.page.active{display:block}
+.motivation-banner{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-radius:var(--radius-sm);padding:12px 16px;font-size:14px;font-weight:700;text-align:center;margin-bottom:14px;animation:banner-glow 2s ease-in-out infinite}
+@keyframes banner-glow{0%,100%{box-shadow:0 4px 15px rgba(102,126,234,.3)}50%{box-shadow:0 4px 25px rgba(102,126,234,.6)}}
+.fullday-progress{background:linear-gradient(135deg,#f093fb,#f5576c);border-radius:var(--radius-sm);padding:14px 16px;color:#fff;margin-bottom:14px}
+.fullday-title{font-size:14px;font-weight:800;margin-bottom:8px}
+.fullday-bar-bg{background:rgba(255,255,255,.3);border-radius:10px;height:10px;overflow:hidden}
+.fullday-bar-fill{height:100%;background:#fff;border-radius:10px;transition:width .5s}
+.fullday-info{display:flex;justify-content:space-between;font-size:12px;margin-top:5px;opacity:.9}
+.stat-cards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.stat-card{background:#fff;border-radius:var(--radius-sm);padding:14px;text-align:center;box-shadow:0 3px 12px rgba(0,0,0,.07)}
+.stat-card-num{font-size:28px;font-weight:900;color:var(--primary)}
+.stat-card-label{font-size:11px;color:var(--text-light);font-weight:600;margin-top:2px}
+.particle{position:fixed;pointer-events:none;z-index:999;animation:p-fall linear forwards}
+@keyframes p-fall{0%{transform:translateY(-20px) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+.score-pop{position:fixed;font-size:28px;font-weight:900;color:var(--primary);pointer-events:none;z-index:998;animation:score-up 1.2s ease-out forwards}
+@keyframes score-up{0%{transform:translateY(0) scale(.5);opacity:1}60%{transform:translateY(-60px) scale(1.3);opacity:1}100%{transform:translateY(-100px) scale(1);opacity:0}}
+.praise-bubble{position:fixed;background:linear-gradient(135deg,#ff6b6b,#ffd93d);color:#fff;font-size:14px;font-weight:800;padding:8px 16px;border-radius:20px;pointer-events:none;z-index:999;animation:praise-float 2s ease-out forwards;white-space:nowrap}
+@keyframes praise-float{0%{transform:translateY(0) scale(.8);opacity:0}20%{transform:translateY(-20px) scale(1.1);opacity:1}80%{transform:translateY(-60px) scale(1);opacity:1}100%{transform:translateY(-80px) scale(.9);opacity:0}}
+.shake{animation:shake .4s ease}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+/* ===== 月亮主题 ===== */
+.moon-deco{position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:28px;animation:moon-float 3s ease-in-out infinite;pointer-events:none}
+@keyframes moon-float{0%,100%{transform:translateY(-50%) rotate(-8deg)}50%{transform:translateY(calc(-50% - 6px)) rotate(8deg)}}
+.star-field{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--dur,2s) ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.2;transform:scale(1)}50%{opacity:1;transform:scale(1.4)}}
+.moon-banner{background:linear-gradient(135deg,#1a1a4e,#2d1b69,#6b4fbb);color:#fff;border-radius:20px;padding:6px 0 4px;text-align:center;margin-bottom:10px;font-size:13px;font-weight:700;letter-spacing:1px;position:relative;overflow:hidden}
+.moon-banner::before{content:'🌙⭐🌟✨🌙⭐🌟✨';position:absolute;top:50%;left:-10px;transform:translateY(-50%);font-size:16px;opacity:.35;letter-spacing:4px;white-space:nowrap}
+.moon-tag{display:inline-block;background:linear-gradient(135deg,#f9ca24,#f0932b);color:#fff;font-size:11px;font-weight:900;padding:2px 8px;border-radius:20px;margin-left:6px;vertical-align:middle;box-shadow:0 2px 6px rgba(249,202,36,.4)}
+/* 首页hero月亮化 */
+.flower-hero{background:linear-gradient(135deg,#1a1a4e,#2d1b69,#6b4fbb,#c471ed) !important}
+.flower-hero::before{content:'🌙⭐🌟✨🌙⭐🌟✨🌙' !important}
+/* 激励横幅月亮化 */
+.motivation-banner{background:linear-gradient(135deg,#2d1b69,#6b4fbb) !important}
+/* 底部导航active色 */
+.nav-item.active .nav-label{color:#6b4fbb !important}
+.nav-item.active::after{background:linear-gradient(90deg,#6b4fbb,#c471ed) !important}
+</style>
+</head>
+<body>
+<div class="star-field" id="starField"></div>
+<script>
+// 生成星空
+(function(){
+  const sf = document.getElementById('starField');
+  for(let i=0;i<60;i++){
+    const s = document.createElement('div');
+    s.className='star';
+    const size = Math.random()*3+1;
+    s.style.cssText=`width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--dur:${(Math.random()*3+1).toFixed(1)}s;animation-delay:${(Math.random()*3).toFixed(1)}s;opacity:${(Math.random()*0.5+0.1).toFixed(2)}`;
+    sf.appendChild(s);
+  }
+})();
+</script>
+
+<div class="app-header">
+  <div class="app-title">🌙 月亮的红花乐园</div>
+  <div class="moon-deco">🌕</div>
+  <button class="parent-btn" onclick="openParentZone()">👨‍👩‍👧 家长</button>
+</div>
+
+<div style="max-width:480px;margin:0 auto">
+
+<!-- 首页 -->
+<div id="page_home" class="page active">
+  <div class="page-content">
+    <div class="flower-hero">
+      <span class="flower-emoji">🌙</span>
+      <div style="font-size:13px;color:rgba(255,255,255,.85);font-weight:700;margin-bottom:2px;letter-spacing:2px">⭐ 月亮宝贝 ⭐</div>
+      <div class="flower-count" id="flowerCount">0</div>
+      <div class="flower-label">我的红花 🌸</div>
+      <div class="streak-bar">
+        <span class="streak-flame" id="streakFlame">✨</span>
+        <div>
+          <div class="streak-text">连续 <span id="streakNum">0</span> 天</div>
+          <div class="streak-sub">坚持打卡中...</div>
+        </div>
+      </div>
+    </div>
+    <div class="fullday-progress">
+      <div class="fullday-title">🏆 全勤挑战：每5天奖励10朵🌸</div>
+      <div class="fullday-bar-bg"><div class="fullday-bar-fill" id="fullDayBar" style="width:0%"></div></div>
+      <div class="fullday-info"><span id="fullDayProgress">0/5天</span><span id="fullDayNext">再坚持5天奖励10朵🌸</span></div>
+    </div>
+    <div class="moon-banner">🌙 月亮宝贝，今天也要闪闪发光哦！<span class="moon-tag">月亮</span></div>
+    <div class="motivation-banner" id="motivationText">欢迎来到红花乐园！</div>
+    <div class="card">
+      <div class="section-title">🏅 最近获得的徽章</div>
+      <div class="recent-badges" id="recentBadges"></div>
+    </div>
+    <div class="section-title">✅ 今日打卡任务</div>
+    <div class="checkin-grid" id="checkinGrid"></div>
+  </div>
+</div>
+
+<!-- 商城 -->
+<div id="page_shop" class="page">
+  <div class="page-content">
+    <div class="card" style="background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;text-align:center;padding:20px">
+      <div style="font-size:32px">🏪</div>
+      <div style="font-size:20px;font-weight:900;margin:6px 0">愿望兑换商城</div>
+      <div style="font-size:14px;opacity:.85">当前红花：<span id="shopFlowerCount" style="font-size:22px;font-weight:900">0</span> 🌸</div>
+    </div>
+    <div style="background:linear-gradient(135deg,#f093fb22,#f5576c22);border-radius:14px;padding:12px 14px;margin-bottom:14px;font-size:13px;color:#764ba2;font-weight:700;text-align:center">💡 长按商品可编辑（家长模式）· 点击立即兑换</div>
+    <div class="shop-grid" id="shopGrid"></div>
+  </div>
+</div>
+
+<!-- 徽章 -->
+<div id="page_badges" class="page">
+  <div class="page-content">
+    <div class="card" style="background:linear-gradient(135deg,#ffd93d,#ff9a9a);text-align:center;padding:20px">
+      <div style="font-size:36px">🏆</div>
+      <div style="font-size:18px;font-weight:900;color:#fff;margin:6px 0">我的成就墙</div>
+      <div style="font-size:14px;color:rgba(255,255,255,.9)">已解锁 <span id="badgeTotalUnlocked" style="font-size:22px;font-weight:900">0</span> / <span id="badgeTotalAll">16</span> 个</div>
+    </div>
+    <div class="badge-category"><div class="badge-category-title">🌸 累计红花成就（7个）</div><div class="badge-grid" id="badgeCat_flower"></div></div>
+    <div class="badge-category"><div class="badge-category-title">🔥 连续打卡成就（5个）</div><div class="badge-grid" id="badgeCat_streak"></div></div>
+    <div class="badge-category"><div class="badge-category-title">✨ 特殊成就（4个）</div><div class="badge-grid" id="badgeCat_special"></div></div>
+  </div>
+</div>
+
+<!-- 统计 -->
+<div id="page_stats" class="page">
+  <div class="page-content">
+    <div class="section-title">📊 习惯养成报告</div>
+    <div class="stat-cards">
+      <div class="stat-card"><div class="stat-card-num" id="statTotalFlowers">0</div><div class="stat-card-label">累计红花🌸</div></div>
+      <div class="stat-card"><div class="stat-card-num" id="statStreak">0</div><div class="stat-card-label">连续打卡🔥</div></div>
+      <div class="stat-card"><div class="stat-card-num" id="statTotalExchanges">0</div><div class="stat-card-label">累计兑换🎁</div></div>
+      <div class="stat-card"><div class="stat-card-num" id="statUnlockedBadges">0</div><div class="stat-card-label">解锁徽章🏅</div></div>
+    </div>
+    <div class="stat-tabs">
+      <button class="stat-tab" data-tab="day" onclick="renderStats('day')">今日</button>
+      <button class="stat-tab active" data-tab="week" onclick="renderStats('week')">本周</button>
+      <button class="stat-tab" data-tab="month" onclick="renderStats('month')">本月</button>
+      <button class="stat-tab" data-tab="quarter" onclick="renderStats('quarter')">季度</button>
+      <button class="stat-tab" data-tab="year" onclick="renderStats('year')">全年</button>
+    </div>
+    <div class="chart-wrap"><div class="chart-title">📈 打卡积分趋势</div><div id="barChartWrap"></div></div>
+    <div class="chart-wrap" id="checkinPie"></div>
+    <div class="chart-wrap" id="exchangePie"></div>
+  </div>
+</div>
+
+<!-- 家长区 -->
+<div id="page_parent" class="page">
+  <div class="page-content">
+    <div class="card" style="background:linear-gradient(135deg,#2c3e50,#3498db);color:#fff;text-align:center;padding:20px">
+      <div style="font-size:32px">👨‍👩‍👧</div>
+      <div style="font-size:18px;font-weight:900;margin:6px 0">家长管理中心</div>
+      <div style="font-size:13px;opacity:.8">自定义孩子的习惯养成计划</div>
+    </div>
+    <div class="parent-panel">
+      <div class="parent-section-title">✅ 打卡项目管理</div>
+      <div class="manage-list" id="parentCheckinList"></div>
+      <button class="btn-add" onclick="openAddCheckinModal()">＋ 添加打卡项目</button>
+    </div>
+    <div class="parent-panel">
+      <div class="parent-section-title">🛍️ 兑换项目管理</div>
+      <div class="manage-list" id="parentShopList"></div>
+      <button class="btn-add" onclick="openAddShopModal()">＋ 添加兑换项目</button>
+    </div>
+    <div class="parent-panel">
+      <div class="parent-section-title">⚙️ 系统设置</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <button class="btn-sm btn-edit" style="padding:10px;font-size:14px;border-radius:10px" onclick="changePwd()">🔐 修改家长密码</button>
+        <button class="btn-sm btn-edit" style="padding:10px;font-size:14px;border-radius:10px;background:linear-gradient(135deg,#6b4fbb,#c471ed);color:#fff;border:none" onclick="exportData()">📤 导出数据（备份/换设备）</button>
+        <button class="btn-sm btn-edit" style="padding:10px;font-size:14px;border-radius:10px;background:linear-gradient(135deg,#11998e,#38ef7d);color:#fff;border:none" onclick="importData()">📥 导入数据（从备份恢复）</button>
+        <button class="btn-sm btn-del" style="padding:10px;font-size:14px;border-radius:10px" onclick="exitParentMode()">🚪 退出家长模式</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+<!-- 底部导航 -->
+<div class="bottom-nav">
+  <div class="nav-item active" data-page="home" onclick="switchPage('home')"><div class="nav-icon">🏠</div><div class="nav-label">首页</div></div>
+  <div class="nav-item" data-page="shop" onclick="switchPage('shop')"><div class="nav-icon">🛍️</div><div class="nav-label">商城</div></div>
+  <div class="nav-item" data-page="badges" onclick="switchPage('badges')"><div class="nav-icon">🏅</div><div class="nav-label">徽章</div></div>
+  <div class="nav-item" data-page="stats" onclick="switchPage('stats')"><div class="nav-icon">📊</div><div class="nav-label">统计</div></div>
+</div>
+
+<!-- 密码弹窗 -->
+<div class="modal-overlay" id="pwdModal">
+  <div class="modal">
+    <span class="modal-emoji">🔐</span>
+    <div class="modal-title">家长验证</div>
+    <input class="modal-input" type="password" id="pwdInput" placeholder="请输入家长密码" maxlength="8" onkeydown="if(event.key==='Enter')verifyParentPwd()">
+    <div id="pwdError" style="color:#ff6b6b;font-size:13px;text-align:center;margin-top:8px;min-height:18px"></div>
+    <div class="modal-btns">
+      <button class="modal-btn cancel" onclick="hideModal('pwdModal')">取消</button>
+      <button class="modal-btn confirm" onclick="verifyParentPwd()">确认</button>
+    </div>
+  </div>
+</div>
+
+<!-- 奖励弹窗 -->
+<div class="modal-overlay" id="rewardModalOverlay" onclick="hideModal('rewardModalOverlay')">
+  <div class="reward-modal" onclick="event.stopPropagation()">
+    <div id="rewardEmoji" style="font-size:60px">🌸</div>
+    <div class="reward-modal-title" id="rewardTitle">全勤奖励！</div>
+    <div class="reward-modal-count" id="rewardCount">+10🌸</div>
+    <div class="reward-modal-sub" id="rewardSub">太棒了！继续坚持！</div>
+  </div>
+</div>
+
+<!-- 徽章解锁弹窗 -->
+<div class="modal-overlay" id="badgeUnlockOverlay" onclick="hideModal('badgeUnlockOverlay')">
+  <div class="badge-unlock-modal" onclick="event.stopPropagation()">
+    <div class="badge-unlock-icon" id="badgeUnlockIcon">🏆</div>
+    <div class="badge-unlock-title">🎊 新徽章解锁！</div>
+    <div class="badge-unlock-name" id="badgeUnlockName"></div>
+    <div style="font-size:13px;color:#888;margin-top:6px" id="badgeUnlockDesc"></div>
+    <button class="modal-btn confirm" style="margin-top:16px;width:100%" onclick="hideModal('badgeUnlockOverlay')">太棒了！🎉</button>
+  </div>
+</div>
+
+<!-- 打卡项目弹窗 -->
+<div class="modal-overlay" id="checkinItemModal">
+  <div class="modal" style="max-height:90vh;overflow-y:auto">
+    <div class="modal-title" id="checkinModalTitle">添加打卡项目</div>
+    <div class="form-group"><label class="form-label">项目名称</label><input class="form-input" type="text" id="checkinItemName" placeholder="如：早起刷牙" maxlength="10"></div>
+    <div class="form-group"><label class="form-label">选择图标</label><div class="emoji-picker" id="checkinEmojiPicker"></div></div>
+    <div class="form-group"><label class="form-label">奖励红花数</label><input class="form-input" type="number" id="checkinItemScore" min="1" max="50" value="5"></div>
+    <div class="form-group"><label class="form-label">每天最多完成次数</label><input class="form-input" type="number" id="checkinItemMaxPerDay" min="1" max="10" value="1"></div>
+    <div class="modal-btns">
+      <button class="modal-btn cancel" onclick="hideModal('checkinItemModal')">取消</button>
+      <button class="modal-btn confirm" onclick="saveCheckinItem()">保存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 商城项目弹窗 -->
+<div class="modal-overlay" id="shopItemModal">
+  <div class="modal" style="max-height:90vh;overflow-y:auto">
+    <div class="modal-title" id="shopModalTitle">添加兑换项目</div>
+    <div class="form-group"><label class="form-label">项目名称</label><input class="form-input" type="text" id="shopItemName" placeholder="如：看30分钟动画" maxlength="12"></div>
+    <div class="form-group"><label class="form-label">选择图标</label><div class="emoji-picker" id="shopEmojiPicker"></div></div>
+    <div class="form-group"><label class="form-label">所需红花数</label><input class="form-input" type="number" id="shopItemCost" min="1" max="500" value="20"></div>
+    <div class="form-group"><label class="form-label">每天最多兑换次数</label><input class="form-input" type="number" id="shopItemMaxPerDay" min="1" max="10" value="1"></div>
+    <div class="modal-btns">
+      <button class="modal-btn cancel" onclick="hideModal('shopItemModal')">取消</button>
+      <button class="modal-btn confirm" onclick="saveShopItem()">保存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============ 数据 ============
+const DEFAULT_CHECKIN = [
+  {id:'c1',name:'早起刷牙',icon:'🦷',score:5,maxPerDay:1},
+  {id:'c2',name:'整理床铺',icon:'🛏️',score:5,maxPerDay:1},
+  {id:'c3',name:'做作业',icon:'📚',score:10,maxPerDay:1},
+  {id:'c4',name:'读课外书',icon:'📖',score:5,maxPerDay:2},
+  {id:'c5',name:'洗碗帮忙',icon:'🍽️',score:8,maxPerDay:1},
+  {id:'c6',name:'运动锻炼',icon:'⚽',score:8,maxPerDay:1},
+  {id:'c7',name:'早睡不磨蹭',icon:'😴',score:5,maxPerDay:1},
+  {id:'c8',name:'主动洗手',icon:'🧼',score:3,maxPerDay:3}
+];
+const DEFAULT_SHOP = [
+  {id:'s1',name:'看30分钟动画',icon:'📺',cost:20,maxPerDay:1},
+  {id:'s2',name:'玩游戏1小时',icon:'🎮',cost:50,maxPerDay:1},
+  {id:'s3',name:'点一次外卖',icon:'🍔',cost:80,maxPerDay:1},
+  {id:'s4',name:'买一本漫画',icon:'📗',cost:60,maxPerDay:1},
+  {id:'s5',name:'出去玩半天',icon:'🎡',cost:100,maxPerDay:1},
+  {id:'s6',name:'零食大礼包',icon:'🍭',cost:40,maxPerDay:1}
+];
+const BADGES = [
+  {id:'b1',cat:'flower',name:'小花蕾',icon:'🌱',desc:'累计获得10朵红花',req:10,type:'total_flower'},
+  {id:'b2',cat:'flower',name:'红花幼苗',icon:'🌷',desc:'累计获得30朵红花',req:30,type:'total_flower'},
+  {id:'b3',cat:'flower',name:'小使者',icon:'🌸',desc:'累计获得50朵红花',req:50,type:'total_flower'},
+  {id:'b4',cat:'flower',name:'小王子',icon:'👑',desc:'累计获得100朵红花',req:100,type:'total_flower'},
+  {id:'b5',cat:'flower',name:'习惯大师',icon:'🏆',desc:'累计获得200朵红花',req:200,type:'total_flower'},
+  {id:'b6',cat:'flower',name:'红花传奇',icon:'💎',desc:'累计获得500朵红花',req:500,type:'total_flower'},
+  {id:'b7',cat:'flower',name:'超级明星',icon:'⭐',desc:'累计获得1000朵红花',req:1000,type:'total_flower'},
+  {id:'b8',cat:'streak',name:'坚持3天',icon:'🔥',desc:'连续打卡3天',req:3,type:'streak'},
+  {id:'b9',cat:'streak',name:'一周之星',icon:'⚡',desc:'连续打卡5天',req:5,type:'streak'},
+  {id:'b10',cat:'streak',name:'完美一周',icon:'🌈',desc:'连续打卡7天',req:7,type:'streak'},
+  {id:'b11',cat:'streak',name:'双周达人',icon:'🦋',desc:'连续打卡14天',req:14,type:'streak'},
+  {id:'b12',cat:'streak',name:'月度冠军',icon:'🥇',desc:'连续打卡30天',req:30,type:'streak'},
+  {id:'b13',cat:'special',name:'首次兑换',icon:'🎁',desc:'第一次兑换商品',req:1,type:'exchange_count'},
+  {id:'b14',cat:'special',name:'储蓄达人',icon:'💰',desc:'同时拥有100朵红花',req:100,type:'current_flower'},
+  {id:'b15',cat:'special',name:'早起鸟儿',icon:'🐦',desc:'早起刷牙打卡7次',req:7,type:'item_c1'},
+  {id:'b16',cat:'special',name:'家务小能手',icon:'🧹',desc:'家务相关打卡20次',req:20,type:'housework'}
+];
+const MOTIVATIONS=['太棒了！你是最厉害的！🌟','哇！继续加油哦！💪','你做到了！超级棒！🎉','小小习惯，大大改变！🌈','每一步都是进步！👣','你是爸爸妈妈的骄傲！❤️','坚持就是胜利！🏆','好习惯让你越来越棒！✨','你真的太努力了！😍','今天的你比昨天更棒！🌟','加油加油再加油！🔥'];
+const PRAISES=['太厉害啦！','哇塞！','棒棒哒！','超级厉害！','你最棒！','了不起！','好样的！','真不错！'];
+const PARTICLES=['🌸','⭐','🌟','✨','🎉','🎊','🌺','💫','🦋','🌈','🎁','💝'];
+const STORAGE_KEY='habit_v3';
+
+function loadData(){try{const r=localStorage.getItem(STORAGE_KEY);if(r){const d=JSON.parse(r);// 旧密码自动迁移
+if(d.parentPwd==='1234')d.parentPwd='1379';return d;}}catch(e){}return getDefault();}
+function saveData(){localStorage.setItem(STORAGE_KEY,JSON.stringify(D));}
+function getDefault(){return{flowers:30,totalFlowers:30,streak:0,lastCheckinDate:'',streakMilestone:0,checkinItems:JSON.parse(JSON.stringify(DEFAULT_CHECKIN)),shopItems:JSON.parse(JSON.stringify(DEFAULT_SHOP)),todayCheckins:{},todayExchanges:{},history:[],unlockedBadges:[],stats:{totalExchanges:0,item_c1:0,housework:0},recentBadges:[],parentPwd:'1379',todayDate:''};}
+
+let D=loadData();
+let isParentMode=false;
+let editingCheckinId=null,editingShopId=null,selEmoji='📚',selShopEmoji='🎁';
+const EMOJI_OPT=['📚','⭐','🌟','🔥','💪','🎯','🏃','🎨','🎵','🦷','🛏️','🍽️','📖','⚽','😴','🧼','🌿','🎪','🍎','🚿','🧹','🧺','🏠','🌞','🌙','💤','📝','✏️','🎭','🌈'];
+const SHOP_EMOJI_OPT=['📺','🎮','🍔','📗','🎡','🍭','🎬','🧸','🎲','🏖️','🍕','🎠','🍦','🎪','🎨','🎸','🚗','🎁','🎀','🛍️','💝','🌺','🎊','🎉','🍰','🧁','🍫','🎈','🦄','🌊'];
+
+function today(){return new Date().toISOString().slice(0,10);}
+function dateOffset(n){const d=new Date();d.setDate(d.getDate()+n);return d.toISOString().slice(0,10);}
+
+function checkDayReset(){
+  const t=today();
+  if(D.todayDate!==t){
+    const yest=dateOffset(-1);
+    if(D.lastCheckinDate&&D.lastCheckinDate!==yest&&D.lastCheckinDate!==t) D.streak=0;
+    D.todayCheckins={};D.todayExchanges={};D.todayDate=t;saveData();
+  }
+}
+
+// ============ 音效 ============
+let _actx=null;
+function getAC(){if(!_actx)try{_actx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}return _actx;}
+function tone(f,t,d,v){try{const c=getAC();if(!c)return;const o=c.createOscillator(),g=c.createGain();o.connect(g);g.connect(c.destination);o.type=t||'sine';o.frequency.setValueAtTime(f,c.currentTime);g.gain.setValueAtTime(v||.25,c.currentTime);g.gain.exponentialRampToValueAtTime(.001,c.currentTime+d);o.start(c.currentTime);o.stop(c.currentTime+d);}catch(e){}}
+function sndCheckin(){[523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,'sine',.15,.25),i*80));}
+function sndExchange(){[784,1047,1319].forEach((f,i)=>setTimeout(()=>tone(f,'triangle',.2,.3),i*100));}
+function sndBadge(){[523,659,784,1047,1319,1568].forEach((f,i)=>setTimeout(()=>tone(f,'sine',.25,.2),i*70));}
+function sndReward(){[392,523,659,784,1047].forEach((f,i)=>setTimeout(()=>tone(f,'sine',.3,.28),i*90));}
+
+// ============ 特效 ============
+function particles(x,y,n){for(let i=0;i<(n||12);i++)setTimeout(()=>{const e=document.createElement('div');e.className='particle';e.textContent=PARTICLES[Math.floor(Math.random()*PARTICLES.length)];e.style.cssText=`left:${(x||innerWidth/2)+(Math.random()-.5)*200}px;top:${y||200}px;font-size:${14+Math.random()*16}px`;const d=1.5+Math.random()*1.5;e.style.animationDuration=d+'s';document.body.appendChild(e);setTimeout(()=>e.remove(),d*1000+100);},i*60);}
+function bigParty(){for(let i=0;i<30;i++)setTimeout(()=>{const e=document.createElement('div');e.className='particle';e.textContent=PARTICLES[Math.floor(Math.random()*PARTICLES.length)];e.style.cssText=`left:${Math.random()*innerWidth}px;top:-30px;font-size:${16+Math.random()*20}px`;const d=2+Math.random()*2;e.style.animationDuration=d+'s';document.body.appendChild(e);setTimeout(()=>e.remove(),d*1000+100);},i*80);}
+function scorePop(x,y,t){const e=document.createElement('div');e.className='score-pop';e.textContent=t;e.style.cssText=`left:${x-30}px;top:${y-20}px`;document.body.appendChild(e);setTimeout(()=>e.remove(),1300);}
+function praise(x,y){const e=document.createElement('div');e.className='praise-bubble';e.textContent=PRAISES[Math.floor(Math.random()*PRAISES.length)];e.style.cssText=`left:${Math.max(10,Math.min(innerWidth-150,(x||innerWidth/2)-60))}px;top:${y||300}px`;document.body.appendChild(e);setTimeout(()=>e.remove(),2100);}
+
+let _tipT=null;
+function showTip(m){let t=document.getElementById('_tip');if(!t){t=document.createElement('div');t.id='_tip';t.style.cssText='position:fixed;top:70px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#ff6b6b,#ffd93d);color:#fff;padding:10px 22px;border-radius:20px;font-size:14px;font-weight:800;z-index:500;transition:opacity .3s;white-space:nowrap;max-width:90vw;text-align:center;box-shadow:0 4px 15px rgba(255,107,107,.4)';document.body.appendChild(t);}t.textContent=m;t.style.opacity='1';clearTimeout(_tipT);_tipT=setTimeout(()=>t.style.opacity='0',2500);}
+
+function showModal(id){document.getElementById(id).classList.add('show');}
+function hideModal(id){document.getElementById(id).classList.remove('show');}
+
+function showReward(title,sub,icon,count){
+  document.getElementById('rewardTitle').textContent=title;
+  document.getElementById('rewardSub').textContent=sub;
+  document.getElementById('rewardEmoji').textContent=icon;
+  document.getElementById('rewardCount').textContent=count;
+  showModal('rewardModalOverlay');bigParty();sndReward();
+  setTimeout(()=>hideModal('rewardModalOverlay'),3000);
+}
+function showBadgeUnlock(b){
+  document.getElementById('badgeUnlockIcon').textContent=b.icon;
+  document.getElementById('badgeUnlockName').textContent=b.name;
+  document.getElementById('badgeUnlockDesc').textContent=b.desc;
+  showModal('badgeUnlockOverlay');bigParty();sndBadge();
+  setTimeout(()=>hideModal('badgeUnlockOverlay'),3500);
+}
+
+// ============ 徽章检测 ============
+function checkBadges(silent){
+  let nb=[];
+  BADGES.forEach(b=>{
+    if(D.unlockedBadges.includes(b.id))return;
+    let v=0;
+    if(b.type==='total_flower')v=D.totalFlowers;
+    else if(b.type==='streak')v=D.streak;
+    else if(b.type==='exchange_count')v=D.stats.totalExchanges;
+    else if(b.type==='current_flower')v=D.flowers;
+    else if(b.type==='item_c1')v=D.stats.item_c1;
+    else if(b.type==='housework')v=D.stats.housework;
+    if(v>=b.req){D.unlockedBadges.push(b.id);nb.push(b);D.recentBadges.unshift(b.id);if(D.recentBadges.length>3)D.recentBadges=D.recentBadges.slice(0,3);}
+  });
+  if(nb.length){saveData();if(!silent){let d=0;nb.forEach(b=>{setTimeout(()=>showBadgeUnlock(b),d);d+=4000;});}}
+}
+
+// ============ 全勤检测 ============
+function checkFullAttendance(){
+  const m=Math.floor(D.streak/5);
+  if(m>D.streakMilestone){
+    const bonus=(m-D.streakMilestone)*10;
+    D.streakMilestone=m;D.flowers+=bonus;D.totalFlowers+=bonus;saveData();
+    setTimeout(()=>showReward('🎊 全勤奖励！','连续打卡'+D.streak+'天，奖励红花','🌸','+'+bonus+' 朵'),1500);
+  }
+}
+
+// ============ 打卡 ============
+function doCheckin(itemId,ev){
+  const item=D.checkinItems.find(i=>i.id===itemId);if(!item)return;
+  const done=D.todayCheckins[itemId]||0;
+  if(done>=item.maxPerDay){showTip('今天已完成最多次数啦！😊');return;}
+  D.todayCheckins[itemId]=done+1;D.flowers+=item.score;D.totalFlowers+=item.score;
+  if(itemId==='c1')D.stats.item_c1++;
+  if(['c2','c5'].includes(itemId))D.stats.housework++;
+  const t=today();
+  D.history.push({date:t,type:'checkin',itemId,itemName:item.name,score:item.score,icon:item.icon});
+  if(D.lastCheckinDate!==t){const y=dateOffset(-1);D.streak=(D.lastCheckinDate===y)?D.streak+1:1;D.lastCheckinDate=t;}
+  saveData();
+  const r=ev?ev.target.getBoundingClientRect():{left:innerWidth/2,top:200,width:0,height:0};
+  const cx=r.left+r.width/2,cy=r.top+r.height/2;
+  particles(cx,cy,10);scorePop(cx,cy,'+'+item.score+'🌸');praise(cx,cy-40);sndCheckin();
+  checkBadges();checkFullAttendance();
+  setTimeout(()=>showTip(MOTIVATIONS[Math.floor(Math.random()*MOTIVATIONS.length)]),600);
+  renderHome();
+}
+
+// ============ 兑换 ============
+function doExchange(itemId,ev){
+  const item=D.shopItems.find(i=>i.id===itemId);if(!item)return;
+  if(D.flowers<item.cost){showTip('红花不够哦，再努力一下！🌸');return;}
+  const done=D.todayExchanges[itemId]||0;
+  if(done>=item.maxPerDay){showTip('今天已兑换最多次数啦！');return;}
+  D.todayExchanges[itemId]=done+1;D.flowers-=item.cost;D.stats.totalExchanges++;
+  D.history.push({date:today(),type:'exchange',itemId,itemName:item.name,score:-item.cost,icon:item.icon});
+  saveData();
+  const r=ev?ev.target.getBoundingClientRect():{left:innerWidth/2,top:300,width:0,height:0};
+  const cx=r.left+r.width/2,cy=r.top;
+  particles(cx,cy,15);scorePop(cx,cy,'-'+item.cost+'🌸');sndExchange();praise(cx,cy-40);
+  checkBadges();renderShop();renderHome();
+}
+
+// ============ 渲染：首页 ============
+function renderHome(){
+  checkDayReset();
+  document.getElementById('flowerCount').textContent=D.flowers;
+  const s=D.streak;
+  document.getElementById('streakNum').textContent=s;
+  document.getElementById('streakFlame').textContent=s>=7?'🔥🔥🔥':s>=3?'🔥🔥':s>=1?'🔥':'✨';
+  const p=s%5;document.getElementById('fullDayBar').style.width=(p/5*100)+'%';
+  document.getElementById('fullDayProgress').textContent=p+'/5天';
+  document.getElementById('fullDayNext').textContent='再坚持'+(5-p)+'天奖励10朵🌸';
+  document.getElementById('motivationText').textContent=MOTIVATIONS[Math.floor(Math.random()*MOTIVATIONS.length)];
+  const g=document.getElementById('checkinGrid');g.innerHTML='';
+  D.checkinItems.forEach(item=>{
+    const done=D.todayCheckins[item.id]||0,isDone=done>=item.maxPerDay;
+    const el=document.createElement('div');el.className='checkin-item'+(isDone?' done':'');
+    el.innerHTML=`<div class="checkin-icon">${item.icon}</div><div class="checkin-name">${item.name}</div><div class="checkin-score">+${item.score}🌸</div>${item.maxPerDay>1?`<div class="checkin-count-tag">${done}/${item.maxPerDay}次</div>`:''}`;
+    el.addEventListener('click',e=>doCheckin(item.id,e));g.appendChild(el);
+  });
+  const rb=document.getElementById('recentBadges');rb.innerHTML='';
+  if(!D.recentBadges.length){rb.innerHTML='<div style="color:#aaa;font-size:13px;padding:10px">打卡解锁徽章吧！🏅</div>';return;}
+  D.recentBadges.forEach(bid=>{
+    const b=BADGES.find(x=>x.id===bid);if(!b)return;
+    const el=document.createElement('div');el.className='recent-badge-item';
+    el.innerHTML=`<div class="recent-badge-icon">${b.icon}</div><div class="recent-badge-name">${b.name}</div>`;
+    rb.appendChild(el);
+  });
+}
+
+// ============ 渲染：商城 ============
+function renderShop(){
+  document.getElementById('shopFlowerCount').textContent=D.flowers;
+  const g=document.getElementById('shopGrid');if(!g)return;g.innerHTML='';
+  D.shopItems.forEach(item=>{
+    const done=D.todayExchanges[item.id]||0,isDone=done>=item.maxPerDay,canAfford=D.flowers>=item.cost;
+    const el=document.createElement('div');el.className='shop-item';el.style.opacity=isDone?'.6':'1';
+    el.innerHTML=`<div class="shop-item-icon">${item.icon}</div><div class="shop-item-name">${item.name}</div><div class="shop-item-cost">🌸 ${item.cost}</div>${item.maxPerDay>1?`<div class="shop-item-count">今日${done}/${item.maxPerDay}</div>`:''}<button class="exchange-btn" style="${(!canAfford||isDone)?'opacity:.5':''}">${isDone?'今日已兑':canAfford?'立即兑换 ✨':'花花不足'}</button>`;
+    el.querySelector('.exchange-btn').addEventListener('click',e=>{e.stopPropagation();if(!isDone&&canAfford)doExchange(item.id,e);else showTip(isDone?'今天已经兑换过啦！':'红花不够哦！继续打卡加油！🌸');});
+    let pt;el.addEventListener('mousedown',()=>pt=setTimeout(()=>{ if(isParentMode)editShopItem(item.id);else showTip('需要家长模式才能编辑！');},700));
+    el.addEventListener('mouseup',()=>clearTimeout(pt));
+    el.addEventListener('touchstart',()=>pt=setTimeout(()=>{ if(isParentMode)editShopItem(item.id);else showTip('需要家长模式才能编辑！');},700));
+    el.addEventListener('touchend',()=>clearTimeout(pt));
+    g.appendChild(el);
+  });
+}
+
+// ============ 渲染：徽章 ============
+function renderBadges(){
+  ['flower','streak','special'].forEach(cat=>{
+    const w=document.getElementById('badgeCat_'+cat);if(!w)return;w.innerHTML='';
+    BADGES.filter(b=>b.cat===cat).forEach(b=>{
+      const ul=D.unlockedBadges.includes(b.id);
+      let v=0;
+      if(b.type==='total_flower')v=D.totalFlowers;else if(b.type==='streak')v=D.streak;
+      else if(b.type==='exchange_count')v=D.stats.totalExchanges;else if(b.type==='current_flower')v=D.flowers;
+      else if(b.type==='item_c1')v=D.stats.item_c1;else if(b.type==='housework')v=D.stats.housework;
+      const pct=Math.min(100,Math.round(v/b.req*100));
+      const el=document.createElement('div');el.className='badge-item '+(ul?'unlocked':'locked');
+      el.innerHTML=`<div class="badge-icon">${b.icon}</div><div class="badge-name">${b.name}</div>${!ul?`<div class="badge-progress"><div class="badge-progress-bar" style="width:${pct}%"></div></div><div class="badge-pct">${pct}%</div>`:'<div class="badge-pct" style="color:#b8860b;font-size:9px">已获得✓</div>'}`;
+      w.appendChild(el);
+    });
+  });
+  document.getElementById('badgeTotalUnlocked').textContent=D.unlockedBadges.length;
+  document.getElementById('badgeTotalAll').textContent=BADGES.length;
+}
+
+// ============ 渲染：统计 ============
+let curTab='week';
+function renderStats(tab){
+  curTab=tab||curTab;
+  document.querySelectorAll('.stat-tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===curTab));
+  document.getElementById('statTotalFlowers').textContent=D.totalFlowers;
+  document.getElementById('statStreak').textContent=D.streak;
+  document.getElementById('statTotalExchanges').textContent=D.stats.totalExchanges;
+  document.getElementById('statUnlockedBadges').textContent=D.unlockedBadges.length;
+  const range=getRange(curTab);
+  const recs=D.history.filter(h=>h.date>=range.s&&h.date<=range.e);
+  renderBar(recs,range);renderPie(recs,'checkin','checkinPie','积分项目构成');renderPie(recs,'exchange','exchangePie','兑换项目构成');
+}
+function getRange(tab){
+  const e=today(),d=new Date();let s;
+  if(tab==='day')s=e;
+  else if(tab==='week'){d.setDate(d.getDate()-6);s=d.toISOString().slice(0,10);}
+  else if(tab==='month'){d.setDate(d.getDate()-29);s=d.toISOString().slice(0,10);}
+  else if(tab==='quarter'){d.setDate(d.getDate()-89);s=d.toISOString().slice(0,10);}
+  else{d.setFullYear(d.getFullYear()-1);s=d.toISOString().slice(0,10);}
+  return{s,e};
+}
+function renderBar(recs,range){
+  const w=document.getElementById('barChartWrap');if(!w)return;
+  const s=new Date(range.s),e=new Date(range.e),diff=Math.round((e-s)/86400000);
+  let dates=[];
+  if(diff<=31){for(let d=new Date(s);d<=e;d.setDate(d.getDate()+1))dates.push({k:d.toISOString().slice(0,10),l:diff<=7?(d.getMonth()+1)+'/'+(d.getDate()):d.getDate()+'日'});}
+  else{let c=new Date(s);while(c<=e){const ks=c.toISOString().slice(0,10),ke=new Date(c);ke.setDate(ke.getDate()+6);dates.push({k:ks,k2:ke>e?range.e:ke.toISOString().slice(0,10),l:(c.getMonth()+1)+'月'+c.getDate()});c.setDate(c.getDate()+7);}}
+  const sm={};recs.filter(r=>r.type==='checkin').forEach(r=>{const dk=dates.find(d=>d.k2?r.date>=d.k&&r.date<=d.k2:r.date===d.k);if(dk)sm[dk.k]=(sm[dk.k]||0)+r.score;});
+  const mx=Math.max(...Object.values(sm),1);
+  w.innerHTML='<div class="bar-chart">'+dates.map(d=>{const v=sm[d.k]||0,h=Math.round(v/mx*85);return`<div class="bar-col"><div class="bar-val">${v||''}</div><div class="bar-fill" style="height:${h}px"></div><div class="bar-label">${d.l}</div></div>`;}).join('')+'</div>';
+}
+function renderPie(recs,type,cid,title){
+  const w=document.getElementById(cid);if(!w)return;
+  const fl=recs.filter(r=>r.type===type);
+  if(!fl.length){w.innerHTML=`<div class="chart-title">${title}</div><div style="color:#aaa;font-size:13px;text-align:center;padding:20px">暂无数据</div>`;return;}
+  const map={};fl.forEach(r=>map[r.itemName]=(map[r.itemName]||0)+Math.abs(r.score));
+  const total=Object.values(map).reduce((a,b)=>a+b,0),cols=['#ff6b6b','#ffd93d','#6bcb77','#4d96ff','#c77dff','#ff9a9a','#a8e6cf'],ents=Object.entries(map).sort((a,b)=>b[1]-a[1]);
+  let paths='',ang=-Math.PI/2;
+  ents.forEach(([n,v],i)=>{const a=v/total*2*Math.PI,x1=Math.cos(ang)*45+55,y1=Math.sin(ang)*45+55;ang+=a;const x2=Math.cos(ang)*45+55,y2=Math.sin(ang)*45+55,lg=a>Math.PI?1:0;paths+=`<path d="M55,55 L${x1},${y1} A45,45 0 ${lg},1 ${x2},${y2} Z" fill="${cols[i%cols.length]}" stroke="#fff" stroke-width="1.5"/>`;});
+  const leg=ents.slice(0,5).map(([n,v],i)=>`<div class="pie-legend-item"><div class="pie-dot" style="background:${cols[i%cols.length]}"></div><span style="flex:1">${n}</span><span style="font-weight:800">${Math.round(v/total*100)}%</span></div>`).join('');
+  w.innerHTML=`<div class="chart-title">${title}</div><div class="pie-wrap"><svg width="110" height="110" viewBox="0 0 110 110" style="flex-shrink:0">${paths}</svg><div class="pie-legend">${leg}</div></div>`;
+}
+
+// ============ 家长区 ============
+function renderParentPanel(){
+  const cl=document.getElementById('parentCheckinList');cl.innerHTML='';
+  D.checkinItems.forEach(item=>{const el=document.createElement('div');el.className='manage-item';el.innerHTML=`<div class="manage-item-icon">${item.icon}</div><div class="manage-item-info"><div class="manage-item-name">${item.name}</div><div class="manage-item-sub">+${item.score}🌸/每天最多${item.maxPerDay}次</div></div><div class="manage-item-actions"><button class="btn-sm btn-edit" onclick="editCheckinItem('${item.id}')">编辑</button><button class="btn-sm btn-del" onclick="delCheckinItem('${item.id}')">删除</button></div>`;cl.appendChild(el);});
+  const sl=document.getElementById('parentShopList');sl.innerHTML='';
+  D.shopItems.forEach(item=>{const el=document.createElement('div');el.className='manage-item';el.innerHTML=`<div class="manage-item-icon">${item.icon}</div><div class="manage-item-info"><div class="manage-item-name">${item.name}</div><div class="manage-item-sub">消耗${item.cost}🌸/每天最多${item.maxPerDay}次</div></div><div class="manage-item-actions"><button class="btn-sm btn-edit" onclick="editShopItem('${item.id}')">编辑</button><button class="btn-sm btn-del" onclick="delShopItem('${item.id}')">删除</button></div>`;sl.appendChild(el);});
+}
+function mkEmojiPicker(cid,opts,sel,cb){const w=document.getElementById(cid);w.innerHTML='';opts.forEach(e=>{const el=document.createElement('div');el.className='emoji-option'+(e===sel?' selected':'');el.textContent=e;el.addEventListener('click',()=>{w.querySelectorAll('.emoji-option').forEach(x=>x.classList.remove('selected'));el.classList.add('selected');cb(e);});w.appendChild(el);});}
+function openAddCheckinModal(){editingCheckinId=null;selEmoji='📚';document.getElementById('checkinModalTitle').textContent='添加打卡项目';document.getElementById('checkinItemName').value='';document.getElementById('checkinItemScore').value='5';document.getElementById('checkinItemMaxPerDay').value='1';mkEmojiPicker('checkinEmojiPicker',EMOJI_OPT,selEmoji,e=>selEmoji=e);showModal('checkinItemModal');}
+function editCheckinItem(id){const item=D.checkinItems.find(i=>i.id===id);if(!item)return;editingCheckinId=id;selEmoji=item.icon;document.getElementById('checkinModalTitle').textContent='编辑打卡项目';document.getElementById('checkinItemName').value=item.name;document.getElementById('checkinItemScore').value=item.score;document.getElementById('checkinItemMaxPerDay').value=item.maxPerDay;mkEmojiPicker('checkinEmojiPicker',EMOJI_OPT,selEmoji,e=>selEmoji=e);showModal('checkinItemModal');}
+function saveCheckinItem(){const n=document.getElementById('checkinItemName').value.trim(),s=parseInt(document.getElementById('checkinItemScore').value)||5,m=parseInt(document.getElementById('checkinItemMaxPerDay').value)||1;if(!n){showTip('请输入项目名称！');return;}if(editingCheckinId){const it=D.checkinItems.find(i=>i.id===editingCheckinId);if(it){it.name=n;it.score=s;it.maxPerDay=m;it.icon=selEmoji;}}else D.checkinItems.push({id:'c'+Date.now(),name:n,icon:selEmoji,score:s,maxPerDay:m});saveData();hideModal('checkinItemModal');renderParentPanel();renderHome();showTip('保存成功！✅');}
+function delCheckinItem(id){if(!confirm('确定删除？'))return;D.checkinItems=D.checkinItems.filter(i=>i.id!==id);delete D.todayCheckins[id];saveData();renderParentPanel();renderHome();showTip('已删除！');}
+function openAddShopModal(){editingShopId=null;selShopEmoji='🎁';document.getElementById('shopModalTitle').textContent='添加兑换项目';document.getElementById('shopItemName').value='';document.getElementById('shopItemCost').value='20';document.getElementById('shopItemMaxPerDay').value='1';mkEmojiPicker('shopEmojiPicker',SHOP_EMOJI_OPT,selShopEmoji,e=>selShopEmoji=e);showModal('shopItemModal');}
+function editShopItem(id){const item=D.shopItems.find(i=>i.id===id);if(!item)return;editingShopId=id;selShopEmoji=item.icon;document.getElementById('shopModalTitle').textContent='编辑兑换项目';document.getElementById('shopItemName').value=item.name;document.getElementById('shopItemCost').value=item.cost;document.getElementById('shopItemMaxPerDay').value=item.maxPerDay;mkEmojiPicker('shopEmojiPicker',SHOP_EMOJI_OPT,selShopEmoji,e=>selShopEmoji=e);showModal('shopItemModal');}
+function saveShopItem(){const n=document.getElementById('shopItemName').value.trim(),c=parseInt(document.getElementById('shopItemCost').value)||20,m=parseInt(document.getElementById('shopItemMaxPerDay').value)||1;if(!n){showTip('请输入项目名称！');return;}if(editingShopId){const it=D.shopItems.find(i=>i.id===editingShopId);if(it){it.name=n;it.cost=c;it.maxPerDay=m;it.icon=selShopEmoji;}}else D.shopItems.push({id:'s'+Date.now(),name:n,icon:selShopEmoji,cost:c,maxPerDay:m});saveData();hideModal('shopItemModal');renderParentPanel();renderShop();showTip('保存成功！✅');}
+function delShopItem(id){if(!confirm('确定删除？'))return;D.shopItems=D.shopItems.filter(i=>i.id!==id);delete D.todayExchanges[id];saveData();renderParentPanel();renderShop();showTip('已删除！');}
+function openParentZone(){document.getElementById('pwdInput').value='';document.getElementById('pwdError').textContent='';showModal('pwdModal');setTimeout(()=>document.getElementById('pwdInput').focus(),300);}
+function verifyParentPwd(){const v=document.getElementById('pwdInput').value;if(v===D.parentPwd){hideModal('pwdModal');isParentMode=true;switchPage('parent');renderParentPanel();}else{document.getElementById('pwdError').textContent='密码错误，请再试！🔐';document.getElementById('pwdInput').value='';document.getElementById('pwdInput').classList.add('shake');setTimeout(()=>document.getElementById('pwdInput').classList.remove('shake'),500);}}
+function exitParentMode(){isParentMode=false;switchPage('home');}
+function changePwd(){const p=prompt('请输入新密码（4-8位数字）：');if(p&&/^\d{4,8}$/.test(p)){D.parentPwd=p;saveData();showTip('密码已修改！✅');}else if(p)showTip('密码格式不对，请输入4-8位数字！');}
+
+// ===== 数据导出/导入 =====
+function exportData(){
+  const json = JSON.stringify(D, null, 2);
+  const blob = new Blob([json], {type:'application/json'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  const date = new Date().toISOString().slice(0,10);
+  a.href = url; a.download = 'moon_habit_backup_' + date + '.json';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(url);
+  showTip('数据已导出！发给新设备后导入即可 🌙');
+}
+
+function importData(){
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = '.json';
+  input.onchange = function(e){
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = function(ev){
+      try{
+        const imported = JSON.parse(ev.target.result);
+        if(!imported.flowers && imported.flowers !== 0) throw new Error('格式不对');
+        if(confirm('确定要导入数据吗？当前数据将被覆盖！')){
+          Object.assign(D, imported);
+          saveData();
+          renderHome();
+          showTip('数据导入成功！月亮宝贝的记录回来啦 🌙✨');
+        }
+      }catch(err){ showTip('文件格式有误，请选择正确的备份文件！'); }
+    };
+    reader.readAsText(file);
+  };
+  document.body.appendChild(input); input.click();
+  document.body.removeChild(input);
+}
+
+// ============ 页面切换 ============
+function switchPage(page){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page_'+page).classList.add('active');
+  const ni=document.querySelector(`.nav-item[data-page="${page}"]`);if(ni)ni.classList.add('active');
+  if(page==='home')renderHome();
+  else if(page==='shop')renderShop();
+  else if(page==='badges')renderBadges();
+  else if(page==='stats')renderStats();
+}
+
+// ============ 启动 ============
+checkDayReset();
+checkBadges(true);
+renderHome();
+setTimeout(()=>showTip(D.streak>0?'月亮宝贝回来啦！已连续打卡 '+D.streak+' 天 🔥':'欢迎月亮宝贝！快来打卡吧 🌙'),600);
+</script>
+</body>
+</html>
